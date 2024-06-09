@@ -17,12 +17,12 @@ public class Program {
 		SellerDao sellerDao = DaoFactory.createSellerDao();
 
 		System.out.println("=== TEST: 1 " + "seller findById ===");
-		Seller seller = sellerDao.findById(3);
+		Seller seller = sellerDao.findById(1);
 		System.out.println(seller);
 		
 
 		System.out.println("\n === TEST: 2 " + "seller findByDepartment ===");
-		Department department = new Department(3, null);
+		Department department = new Department(7, null);
 
 		List<Seller> listaSeller = sellerDao.findByDepartment(department);
 
@@ -46,9 +46,11 @@ public class Program {
 			System.out.println(sellers);
 		}
 		
-		System.out.println("\n === TEST: 5 " + "seller findAll ===");
+		System.out.println("\n === TEST: 5 " + "seller update ===");
+		Department dep = new Department(7, null);
 		Seller seller2 = sellerDao.findById(6);
 		seller2.setName("Alex Costa");
+		seller2.setDepartment(dep);
 		sellerDao.update(seller2);
 		System.out.println("Cadastro Atualizado!");
 		
