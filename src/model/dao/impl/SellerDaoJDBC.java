@@ -12,7 +12,6 @@ import java.util.Map;
 
 import db.DB;
 import db.DbException;
-import db.DbIntegrityException;
 import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
@@ -40,16 +39,16 @@ public class SellerDaoJDBC implements SellerDao {
 			st.setDate(3, new Date(obj.getBirthDate().getTime()));
 			st.setDouble(4, obj.getBaseSalary());
 			st.setInt(5, obj.getDepartment().getId());
-			
+
 			int rowsAffected = st.executeUpdate();
 			if (rowsAffected > 0) {
 				ResultSet rs = st.getGeneratedKeys();
 				if (rs.next()) {
-					int id = rs.getInt(1);//posição da coluna
+					int id = rs.getInt(1);// posição da coluna
 					obj.setId(id);
 				}
 				DB.closeResultSet(rs);
-			}else {
+			} else {
 				throw new DbException("Erro inesperado, nenhuma linha foi afetada!");
 			}
 
@@ -62,7 +61,26 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public void update(Seller obj) {
+		PreparedStatement st = null;
 
+		try {
+
+			st = conn.prepareStatement(
+					"UPDATE seller SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? WHERE Id = ?");
+
+			st.setString(1, obj.getName());
+			st.setString(2, obj.getEmail());
+			st.setDate(3, new Date(obj.getBirthDate().getTime()));
+			st.setDouble(4, obj.getBaseSalary());
+			st.setInt(5, obj.getDepartment().getId());
+			st.setInt(6, obj.getId());
+			st.executeUpdate();
+
+		} catch (Exception e) {
+			throw new DbException("Error = " + e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override

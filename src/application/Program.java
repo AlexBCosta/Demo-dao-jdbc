@@ -44,7 +44,11 @@ public class Program {
 			System.out.println(sellers);
 		}
 		
-	
+		System.out.println("\n === TEST: 5 " + "seller findAll ===");
+		Seller seller2 = sellerDao.findById(6);
+		seller2.setName("Alex Costa");
+		sellerDao.update(seller2);
+		System.out.println("Cadastro Atualizado!");
 	}
 
 }
