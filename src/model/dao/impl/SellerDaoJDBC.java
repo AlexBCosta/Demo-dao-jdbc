@@ -85,6 +85,23 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public void deleteById(Integer id) {
+		PreparedStatement st = null;
+
+		try {
+			st = conn.prepareStatement("DELETE FROM seller WHERE Id = ?");
+			st.setInt(1, id);
+			Seller ids = findById(id);
+			if (ids.getId() != null) {
+				st.executeUpdate();
+			} else {
+				throw new DbException("Seller não encontrado!");
+			}
+
+		} catch (SQLException e) {
+			throw new DbException("Não foi possível excluir" + e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
 
 	}
 
@@ -105,8 +122,9 @@ public class SellerDaoJDBC implements SellerDao {
 				Seller seller = instanciaSeller(rs, department);
 
 				return seller;
+			}else {
+				throw new DbException("Seller não existe na base de dados!");
 			}
-			return null;
 
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
